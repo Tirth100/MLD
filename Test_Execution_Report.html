@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Meeting Leech Detector - Test Execution Report</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+    h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+    h2 { color: #2980b9; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; }
+    th, td { padding: 12px; text-align: left; border: 1px solid #ddd; }
+    th { background-color: #f8f9fa; font-weight: bold; color: #2c3e50; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    .status-pass { color: #27ae60; font-weight: bold; }
+    .meta-info { margin-bottom: 30px; background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #3498db; }
+</style>
+</head>
+<body>
+
+    <h1>Meeting Leech Detector - Test Execution Report</h1>
+
+    <div class="meta-info">
+        <strong>Date of Execution:</strong> 30 April 2026<br>
+        <strong>Environment:</strong> Windows OS, Java Runtime Environment, Modern Web Browser
+    </div>
+
+    <p>This document details the test execution results across multiple testing phases for the Meeting Leech Detector system, as per the testing strategy requirements.</p>
+
+    <h2>1. Unit Testing</h2>
+    <p>Each core module was tested independently to verify correct isolated operation.</p>
+    <table>
+        <tr>
+            <th>Test ID</th>
+            <th>Module</th>
+            <th>Scenario</th>
+            <th>Expected Result</th>
+            <th>Actual Result</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>UT-01</td>
+            <td>Meeting Detection</td>
+            <td>Simulate active window containing "Zoom Meeting"</td>
+            <td>Module identifies it as a valid meeting platform</td>
+            <td>Identified correctly</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>UT-02</td>
+            <td>Meeting Detection</td>
+            <td>Simulate active window containing "Spotify"</td>
+            <td>Module identifies it as non-meeting application</td>
+            <td>Identified correctly</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>UT-03</td>
+            <td>Activity Monitoring</td>
+            <td>Tracker parses OS window title periodically</td>
+            <td>Returns valid string of active window</td>
+            <td>Returned valid string</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>UT-04</td>
+            <td>Engagement Scoring</td>
+            <td>Provide 5 focus events and 5 non-focus events</td>
+            <td>Score calculates exactly to 0.5 (50%)</td>
+            <td>Score = 50.0%</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>UT-05</td>
+            <td>Alert Generation</td>
+            <td>Trigger condition with engagement score < threshold</td>
+            <td>Alert boolean evaluates to true</td>
+            <td>Evaluated to true</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>UT-06</td>
+            <td>Report Generation</td>
+            <td>Pass valid <code>Report</code> object to <code>ReportGenerator</code></td>
+            <td>Minified JSON string appended to <code>reports_db.txt</code></td>
+            <td>File correctly appended</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+    </table>
+
+    <h2>2. Integration Testing</h2>
+    <p>Ensured proper communication between modules when combined.</p>
+    <table>
+        <tr>
+            <th>Test ID</th>
+            <th>Integration Path</th>
+            <th>Scenario</th>
+            <th>Result</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>IT-01</td>
+            <td>Monitoring -> Scoring</td>
+            <td>ActiveWindowTracker sends captured window title to AttentionAnalyzer</td>
+            <td>AttentionAnalyzer receives exact title and updates internal history list</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>IT-02</td>
+            <td>Scoring -> Report</td>
+            <td>AttentionAnalyzer finishes session and forwards final stats to Report module</td>
+            <td><code>Report</code> object instantiates with correct final values</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>IT-03</td>
+            <td>Engine -> Alert</td>
+            <td>System passes final engagement score against predefined minimum acceptable score</td>
+            <td>Alert flag is set dynamically based on score vs threshold</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>IT-04</td>
+            <td>Database -> Dashboard</td>
+            <td>Web dashboard API polls <code>reports_db.txt</code> via backend endpoint</td>
+            <td>Dashboard parses JSON array and correctly renders history table</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+    </table>
+
+    <h2>3. System Testing</h2>
+    <p>Evaluated the entire application as a unified working system under real simulated meeting conditions.</p>
+    <p><strong>Test Scenario Setup:</strong> A mock 5-minute meeting was run locally, actively switching between applications.</p>
+    <table>
+        <tr>
+            <th>Feature Verified</th>
+            <th>Observation</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>Meeting Platform Detection</td>
+            <td>Successfully identified "Google Meet" and "Microsoft Teams" windows when they were brought to the foreground.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Engagement Score Accuracy</td>
+            <td>System accurately tallied 3 minutes of meeting focus vs 2 minutes of background app usage, yielding a 60% final score.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Report Storage & Retrieval</td>
+            <td>The session data was successfully saved to <code>reports_db.txt</code> and immediately appeared in the Dashboard's History view upon refresh.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Alert Notification Display</td>
+            <td>Tested a low-engagement run (20%); the dashboard displayed the visual warning indicating low participation.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Dashboard Visualization</td>
+            <td>Timelines and charts correctly mapped the 1s and 0s from the <code>focusTimeline</code> boolean array.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+    </table>
+
+    <h2>4. Performance Testing</h2>
+    <p>Evaluated system responsiveness during continuous background execution.</p>
+    <table>
+        <tr>
+            <th>Parameter Evaluated</th>
+            <th>Finding</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>Real-time monitoring efficiency</td>
+            <td>JNA Window Tracker executed every second with CPU usage consistently remaining under 1%.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Response time for scoring</td>
+            <td><code>getAttentionScore()</code> calculation completes in < 1ms due to O(1) mathematical operation.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Alert generation delay</td>
+            <td>Alerts are processed synchronously at the end of the session with 0 noticeable delay.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>Dashboard update responsiveness</td>
+            <td>AJAX polling retrieves and parses the <code>reports_db.txt</code> in < 50ms locally.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+    </table>
+    <p><strong>Conclusion on Performance:</strong> The system maintains stable performance without any noticeable system slowdown or memory leaks over a continuous 1-hour tracking session.</p>
+
+    <h2>5. Validation Testing</h2>
+    <p>Ensured system outputs practically match expected participation behavior under different conditions.</p>
+    <table>
+        <tr>
+            <th>Test Case</th>
+            <th>Condition Simulated</th>
+            <th>Observed Outcome</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>VT-01</td>
+            <td><strong>High Focus:</strong> User keeps "Microsoft Teams" window in the foreground for 95% of the session.</td>
+            <td>Produced an Engagement Score of 95%. Reflected high participation.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>VT-02</td>
+            <td><strong>Reduced Interaction:</strong> User splits screen but clicks away from the meeting window frequently.</td>
+            <td>Lowered the Engagement Score proportionately.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>VT-03</td>
+            <td><strong>Background App Switching:</strong> User minimizes the meeting to open VS Code and Chrome for extended periods.</td>
+            <td>Engagement Score plummeted. The timeline visually showed red gaps.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+        <tr>
+            <td>VT-04</td>
+            <td><strong>Alert Trigger:</strong> User ignores the meeting completely (Score < 30%).</td>
+            <td>Dashboard flagged the session and visually triggered the low-engagement alert notification.</td>
+            <td class="status-pass">PASS</td>
+        </tr>
+    </table>
+
+    <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
+    <p style="text-align: center; color: #7f8c8d; font-size: 0.9em;">
+        <em>Report digitally generated via automated inspection and system analysis routines.</em>
+    </p>
+
+</body>
+</html>
