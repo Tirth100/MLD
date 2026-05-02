@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Meeting Leech Detector</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body id="managerDashboard">
+    
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column p-3">
+        <a href="#" class="d-flex align-items-center mb-4 text-dark text-decoration-none px-3">
+            <i class="bi bi-radar text-primary fs-3 me-2"></i>
+            <span class="fs-5 fw-bold">MLD Admin</span>
+        </a>
+        <hr class="border-secondary mt-0">
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+                <a href="manager-dashboard.html" class="nav-link">
+                    <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="analytics.html" class="nav-link">
+                    <i class="bi bi-graph-up"></i> Analytics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reports.html" class="nav-link">
+                    <i class="bi bi-file-earmark-text"></i> Reports
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="alerts.html" class="nav-link">
+                    <i class="bi bi-bell"></i> Alerts 
+                    <span id="navAlertBadge" class="badge bg-danger rounded-pill ms-auto d-none">0</span>
+                </a>
+            </li>
+        </ul>
+        <hr class="border-secondary">
+        <div class="px-3 py-2">
+            <a href="../index.html" class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navbar -->
+        <header class="top-navbar mb-4 rounded-3 glass-card">
+            <div class="d-flex align-items-center">
+                <h4 class="mb-0 fw-bold">Overview</h4>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="position-relative">
+                    <i class="bi bi-bell-fill fs-5 text-muted"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                        <span class="visually-hidden">New alerts</span>
+                    </span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=7c3aed&color=fff" alt="Profile" class="rounded-circle" width="40" height="40">
+            </div>
+        </header>
+
+        <div class="row g-4 mb-4">
+            <!-- Metric Cards -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card glass-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="card-subtitle text-muted">Total Monitored</h6>
+                            <div class="bg-primary bg-opacity-10 p-2 rounded text-primary">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                        </div>
+                        <h2 class="metric-value" id="totalMonitoredMetricValue">42</h2>
+                        <span class="text-success small" id="totalMonitoredTrend"><i class="bi bi-arrow-up-short"></i> Based on total records</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card glass-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="card-subtitle text-muted">Avg Engagement</h6>
+                            <div class="bg-info bg-opacity-10 p-2 rounded text-info">
+                                <i class="bi bi-activity"></i>
+                            </div>
+                        </div>
+                        <h2 class="metric-value" id="avgEngagementMetricValue">76%</h2>
+                        <span class="text-success small" id="avgEngagementTrend"><i class="bi bi-arrow-up-short"></i> Across all records</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card glass-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="card-subtitle text-muted">Active Meetings</h6>
+                            <div class="bg-warning bg-opacity-10 p-2 rounded text-warning">
+                                <i class="bi bi-camera-video-fill"></i>
+                            </div>
+                        </div>
+                        <h2 class="metric-value" id="activeMeetingsMetricValue">5</h2>
+                        <span class="text-muted small">Live right now</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card glass-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="card-subtitle text-muted">Low Engagement Alerts</h6>
+                            <div class="bg-danger bg-opacity-10 p-2 rounded text-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </div>
+                        </div>
+                        <h2 class="metric-value text-danger" id="alertsMetricValue">0</h2>
+                        <span class="text-danger small">Requires attention</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Available Employees Table -->
+            <div class="col-lg-12 mb-4">
+                <div class="card glass-card h-100 border-top border-info border-4">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-hdd-network me-2 text-info"></i>Available Employees</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-transparent">
+                                    <tr>
+                                        <th scope="col" class="ps-4">Employee Name</th>
+                                        <th scope="col">IP Address</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="availableEmployeesTableBody">
+                                    <tr><td colspan="3" class="text-center text-muted py-3">No employees connected yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Table -->
+            <div class="col-lg-8">
+                <div class="card glass-card h-100">
+                    <div class="card-header bg-transparent border-bottom border-secondary d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0 fw-bold">Live Employee Engagement</h5>
+                        <div class="d-flex gap-2">
+                            <a href="reports.html" class="btn btn-sm btn-outline-primary shadow-sm">View Reports</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-transparent">
+                                    <tr>
+                                        <th scope="col" class="ps-4">Employee</th>
+                                        <th scope="col">Engagement Score</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="engagementTableBody">
+                                    <!-- Dynamic content loads here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="col-lg-4">
+                <div class="card glass-card h-100">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h5 class="mb-0 fw-bold">Recent Alerts</h5>
+                    </div>
+                    <div class="card-body" id="alertNotificationSection">
+                        <!-- Dynamic alerts load here -->
+                    </div>
+                    <div class="card-footer bg-transparent border-top border-secondary text-center py-3">
+                        <a href="alerts.html" class="text-decoration-none text-primary fw-medium">View All Alerts <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Meeting Summary (MapReduce format) -->
+        <div class="row g-4 mt-1 mb-4">
+            <div class="col-12">
+                <div class="card glass-card">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h5 class="mb-0 fw-bold">Latest Meeting Summary <span class="badge bg-primary ms-2" id="latestMeetingScoreBadge">0%</span></h5>
+                    </div>
+                    <div class="card-body" id="latestMeetingSummarySection">
+                        <div class="text-muted text-center py-4">Waiting for meeting data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap & Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>
